@@ -12,13 +12,15 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import ownUtil.MeldungsfensterAnzeiger;
 import ownUtil.Observer;
 
 public class SportartikelView implements Observer{
 	
 	private SportartikelControl sportartikelControl;
-  	private BaelleModel baelleModel;	
+  	private BaelleModel baelleModel;
+  	private Stage stage;
 	
     //---Anfang Attribute der grafischen Oberflaeche---
     private Pane pane = new  Pane();
@@ -38,6 +40,7 @@ public class SportartikelView implements Observer{
     	this.sportartikelControl = sportartikelControl;
     	this.baelleModel = baelleModel;
     	this.baelleModel.addObserver(this);
+    	this.stage = stage;
 		this.initKomponenten();
 		this.initListener();
    	}
@@ -82,6 +85,15 @@ public class SportartikelView implements Observer{
 	    			update();
 	        	} 
    	    });
+  	    
+  	  stage.setOnCloseRequest(
+  			 new EventHandler<WindowEvent>() {
+  			 @Override
+  			 public void handle(WindowEvent e) {
+  				 SportartikelView.this.baelleModel.removeObserver(SportartikelView.this);
+  			 }
+  			 });
+
     }
    
     /*
@@ -112,6 +124,7 @@ public class SportartikelView implements Observer{
    		    text = text + baelleModel.holeBaelle()[i].gibZurueck('|') + "\n";
    		}
    		txtAnzeigeBaelle.setText(text);
+   		zeigeInformationsfensterAn("Beachten Sie die Anzeige!");
     }
     
     private void zeigeInformationsfensterAn(String meldung){
