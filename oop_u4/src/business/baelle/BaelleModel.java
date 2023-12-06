@@ -3,7 +3,21 @@ package business.baelle;
 import java.io.*;
 
 public class BaelleModel {
- 		
+	private static BaelleModel baelleModel;
+	
+	private BaelleModel() {
+	}
+	
+	public static BaelleModel getIntstance() {
+		if(baelleModel == null) {
+			baelleModel = new BaelleModel();
+		}
+		return baelleModel;
+		
+	}
+	
+	
+	
 	private Ball[] baelle = new Ball[100];
 	private int anzahlBaelle;
 	

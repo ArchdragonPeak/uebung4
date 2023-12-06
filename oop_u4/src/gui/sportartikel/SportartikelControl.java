@@ -10,7 +10,7 @@ public class SportartikelControl {
 	private BaelleModel baelleModel;
 
 	public SportartikelControl(Stage stage){
-		this.baelleModel = new BaelleModel();
+		this.baelleModel = BaelleModel.getIntstance();
 		this.sportartikelView = new SportartikelView(this, stage, 
 			baelleModel);
 	}
