@@ -1,7 +1,7 @@
 package gui.sportartikel;
 
-import java.util.Observable;
-import java.util.Observer;
+//import java.util.Observable;
+//import java.util.Observer;
 
 import business.baelle.*;
 import javafx.event.ActionEvent;
@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import ownUtil.MeldungsfensterAnzeiger;
+import ownUtil.Observer;
 
 public class SportartikelView implements Observer{
 	
@@ -77,7 +78,8 @@ public class SportartikelView implements Observer{
 	    		@Override
 	        	public void handle(ActionEvent e) {
 	            	//zeigeBaelleAn();
-	    			update(baelleModel, null);
+	    			//update(baelleModel, null);
+	    			update();
 	        	} 
    	    });
     }
@@ -91,6 +93,7 @@ public class SportartikelView implements Observer{
    		txtAnzeigeBaelle.setText(text);
     }	
    */
+    /*
 	@Override
 	public void update(Observable obs, Object arg) {
 		// TODO Auto-generated method stub
@@ -102,6 +105,14 @@ public class SportartikelView implements Observer{
 	   		txtAnzeigeBaelle.setText(text);
 		}
 	}
+	*/
+    public void update() {
+    	String text = "";
+   		for(int i = 0; i < baelleModel.holeBaelle().length; i++) {
+   		    text = text + baelleModel.holeBaelle()[i].gibZurueck('|') + "\n";
+   		}
+   		txtAnzeigeBaelle.setText(text);
+    }
     
     private void zeigeInformationsfensterAn(String meldung){
  		new MeldungsfensterAnzeiger(AlertType.INFORMATION,

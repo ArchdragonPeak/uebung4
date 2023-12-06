@@ -1,7 +1,7 @@
 package gui.baelle;
    
-import java.util.Observable;
-import java.util.Observer;
+//import java.util.Observable;
+//import java.util.Observer;
 
 import business.baelle.*;
 import javafx.event.*;
@@ -11,7 +11,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
 import ownUtil.MeldungsfensterAnzeiger;
+import ownUtil.Observer;
 
 public class BaelleView implements Observer{
 	  
@@ -122,7 +124,8 @@ public class BaelleView implements Observer{
 	        public void handle(ActionEvent e) {
 	    		baelleControl.leseBaelleAusDatei();
 	    		//fuelleComboBoxEinkaufsdatum();
-	    		update(baelleModel, null);
+	    		//update(baelleModel, null);
+	    		update();
 	        } 
         });
    }
@@ -151,8 +154,8 @@ public class BaelleView implements Observer{
 		}  
 	}
   */
-   
-	public void update(Observable obs, Object arg) {
+   /*
+   public void update(Observable obs, Object arg) {
 		// TODO Auto-generated method stub
 		if(obs.getClass().getSimpleName().equals("BaelleModel")) {
 			cmbBxEinkaufdatum.getItems().clear();
@@ -161,7 +164,14 @@ public class BaelleView implements Observer{
 				}
 		}
 	}
-	
+	*/
+   public void update() {
+		cmbBxEinkaufdatum.getItems().clear();
+		for(int i = 0; i < baelleModel.getAnzahlBaelle(); i++) {
+			cmbBxEinkaufdatum.getItems().add(baelleModel.holeBaelle()[i].getEinkaufsdatum() + "");
+		}
+   }
+   
    void zeigeInformationsfensterAn(String meldung){
 		new MeldungsfensterAnzeiger(AlertType.INFORMATION,
 			"Information", meldung).zeigeMeldungsfensterAn();

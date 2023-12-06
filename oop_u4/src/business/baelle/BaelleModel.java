@@ -1,10 +1,16 @@
 package business.baelle;
 
 import java.io.*;
-import java.util.Observable;
+import java.util.Vector;
 
-public class BaelleModel extends Observable{
+import ownUtil.Observable;
+//import java.util.Observable;
+import ownUtil.Observer;
+
+public class BaelleModel implements Observable{
 	private static BaelleModel baelleModel;
+	
+	private Vector<Observer> observers = new Vector<Observer>();
 	
 	private BaelleModel() {
 	}
@@ -67,8 +73,24 @@ public class BaelleModel extends Observable{
 	   			Double.parseDouble(zeile[5]));
 	   	}
 	    ein.close();
-	    setChanged();
+	    //setChanged();
 	    notifyObservers();
  	}
+
+	@Override
+	public void addObserver(Observer obs) {
+		this.observers.add(obs);
+		
+	}
+
+	@Override
+	public void removeObserver(Observer obs) {
+		this.observers.remove(obs);
+	}
+
+	@Override
+	public void notifyObservers() {
+		for (Observer obs : observers) obs.update();
+	}
 
 }
