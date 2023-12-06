@@ -1,8 +1,9 @@
 package business.baelle;
 
 import java.io.*;
+import java.util.Observable;
 
-public class BaelleModel {
+public class BaelleModel extends Observable{
 	private static BaelleModel baelleModel;
 	
 	private BaelleModel() {
@@ -66,6 +67,8 @@ public class BaelleModel {
 	   			Double.parseDouble(zeile[5]));
 	   	}
 	    ein.close();
+	    setChanged();
+	    notifyObservers();
  	}
 
 }

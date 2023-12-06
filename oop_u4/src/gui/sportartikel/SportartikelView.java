@@ -1,5 +1,8 @@
 package gui.sportartikel;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import business.baelle.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,7 +14,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import ownUtil.MeldungsfensterAnzeiger;
 
-public class SportartikelView {
+public class SportartikelView implements Observer{
 	
 	private SportartikelControl sportartikelControl;
   	private BaelleModel baelleModel;	
@@ -19,7 +22,7 @@ public class SportartikelView {
     //---Anfang Attribute der grafischen Oberflaeche---
     private Pane pane = new  Pane();
     private Label lblAnzeigeTrikots    		= new Label("Anzeige Trikots");
-    private Label lblAnzeigeBaelle          = new Label("Anzeige Bälle");
+    private Label lblAnzeigeBaelle          = new Label("Anzeige Bï¿½lle");
     private TextArea txtAnzeigeTrikots      = new TextArea();
     private TextArea txtAnzeigeBaelle       = new TextArea();  
     private Button btnAnzeigeBaelle         = new Button("Anzeige");
@@ -33,6 +36,7 @@ public class SportartikelView {
     	stage.show();
     	this.sportartikelControl = sportartikelControl;
     	this.baelleModel = baelleModel;
+    	this.baelleModel.addObserver(this);
 		this.initKomponenten();
 		this.initListener();
    	}
@@ -72,11 +76,13 @@ public class SportartikelView {
  			new EventHandler<ActionEvent>() {
 	    		@Override
 	        	public void handle(ActionEvent e) {
-	            	zeigeBaelleAn();
+	            	//zeigeBaelleAn();
+	    			update(baelleModel, null);
 	        	} 
    	    });
     }
    
+    /*
     public void zeigeBaelleAn(){
    		String text = "";
    		for(int i = 0; i < baelleModel.holeBaelle().length; i++) {
@@ -84,11 +90,23 @@ public class SportartikelView {
    		}
    		txtAnzeigeBaelle.setText(text);
     }	
-   
+   */
+	@Override
+	public void update(Observable obs, Object arg) {
+		// TODO Auto-generated method stub
+		if(obs.getClass().getSimpleName().equals("BaelleModel")) {
+			String text = "";
+	   		for(int i = 0; i < baelleModel.holeBaelle().length; i++) {
+	   		    text = text + baelleModel.holeBaelle()[i].gibZurueck('|') + "\n";
+	   		}
+	   		txtAnzeigeBaelle.setText(text);
+		}
+	}
+    
     private void zeigeInformationsfensterAn(String meldung){
  		new MeldungsfensterAnzeiger(AlertType.INFORMATION,
  			"Information", meldung).zeigeMeldungsfensterAn();
-    }	
+    }
     
 
 }

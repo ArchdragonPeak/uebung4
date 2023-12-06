@@ -1,5 +1,8 @@
 package gui.baelle;
    
+import java.util.Observable;
+import java.util.Observer;
+
 import business.baelle.*;
 import javafx.event.*;
 import javafx.scene.Scene;
@@ -10,14 +13,14 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import ownUtil.MeldungsfensterAnzeiger;
 
-public class BaelleView {
+public class BaelleView implements Observer{
 	  
 	private BaelleModel baelleModel;
 	private BaelleControl baelleControl;
 	
     //---Anfang Attribute der grafischen Oberflaeche---
     private Pane pane     				       = new  Pane();
-    private Label lblAenderung  	 	       = new Label("Änderung");
+    private Label lblAenderung  	 	       = new Label("ï¿½nderung");
     private Label lblEinkaufsdatum 		       = new Label("Einkaufsdatum:");
     private Label lblMaterial        	       = new Label("Material:");
     private Label lblSportart  	 	           = new Label("Sportart:");
@@ -30,7 +33,7 @@ public class BaelleView {
     private TextField txtStatus	               = new TextField();
     private TextField txtNutzung	           = new TextField();
     private TextField txtPreis	               = new TextField();
-    private Button btnAenderungAufnehmen	   = new Button("Änderung aufnehmen"); 
+    private Button btnAenderungAufnehmen	   = new Button("ï¿½nderung aufnehmen"); 
     private MenuBar mnbrMenuLeiste  	       = new MenuBar();
     private Menu mnDatei             	       = new Menu("Datei");
     private MenuItem mnItmCsvImport 	       = new MenuItem("csv-Import");
@@ -40,10 +43,11 @@ public class BaelleView {
     	Stage primaryStage, BaelleModel baelleModel){
     	Scene scene = new Scene(this.pane, 300, 380);
     	primaryStage.setScene(scene);
-    	primaryStage.setTitle("Verwaltung von Bällen");
+    	primaryStage.setTitle("Verwaltung von Bï¿½llen");
     	primaryStage.show();
     	this.baelleControl = baelleControl;
     	this.baelleModel = baelleModel;
+    	this.baelleModel.addObserver(this);
 		this.initKomponenten();
 		this.initListener();
     }
@@ -117,7 +121,8 @@ public class BaelleView {
 	    	@Override
 	        public void handle(ActionEvent e) {
 	    		baelleControl.leseBaelleAusDatei();
-	    		fuelleComboBoxEinkaufsdatum();
+	    		//fuelleComboBoxEinkaufsdatum();
+	    		update(baelleModel, null);
 	        } 
         });
    }
@@ -126,7 +131,7 @@ public class BaelleView {
 		String einkaufsdatum = this.cmbBxEinkaufdatum.getValue();
 		if(einkaufsdatum == null) {
 			this.zeigeInformationsfensterAn( 
-				"Wählen Sie ein Einkaufsdatum aus.");
+				"Wï¿½hlen Sie ein Einkaufsdatum aus.");
 		}
 		else {
 			Ball ball = this.baelleModel.gibBall(einkaufsdatum);
@@ -138,14 +143,25 @@ public class BaelleView {
 	    }
    }
    
-   public void fuelleComboBoxEinkaufsdatum() {
+/*   public void fuelleComboBoxEinkaufsdatum() {
 	   cmbBxEinkaufdatum.getItems().clear();
 		for(int i = 0; i < baelleModel.getAnzahlBaelle(); i++) {
 			cmbBxEinkaufdatum.getItems().add(
 				baelleModel.holeBaelle()[i].getEinkaufsdatum() + "");
 		}  
 	}
-    
+  */
+   
+	public void update(Observable obs, Object arg) {
+		// TODO Auto-generated method stub
+		if(obs.getClass().getSimpleName().equals("BaelleModel")) {
+			cmbBxEinkaufdatum.getItems().clear();
+				for(int i = 0; i < baelleModel.getAnzahlBaelle(); i++) {
+					cmbBxEinkaufdatum.getItems().add(baelleModel.holeBaelle()[i].getEinkaufsdatum() + "");
+				}
+		}
+	}
+	
    void zeigeInformationsfensterAn(String meldung){
 		new MeldungsfensterAnzeiger(AlertType.INFORMATION,
 			"Information", meldung).zeigeMeldungsfensterAn();
